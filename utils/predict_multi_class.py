@@ -20,7 +20,7 @@ def build_bert_model():
     config = get_config(file_path=BERT_CONFIG)
     net_bert = BertModel(config) # BERTモデルを作成します
     net_trained = BertForchABSA(net_bert)
-    net_trained.load_state_dict(torch.load("/content/drive/My Drive/Colab Notebooks/bert_最終課題/weights/bert_fine_tuning_chABSA_test.pth", map_location='cpu'))
+    net_trained.load_state_dict(torch.load("/content/drive/MyDrive/Colab Notebooks/BERT/clinical_reasoning/weights/bert_fine_tuning_chABSA_test.pth", map_location='cpu'))
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     net_trained.eval()   # モデルを検証モードに
     net_trained.to(device)
@@ -61,10 +61,10 @@ def create_tensor(text, max_length, TEXT):
     return token_ids
 
 def create_vocab_text():
-    TEXT = torchtext.data.Field(sequential=True, tokenize=tokenizer_with_preprocessing, use_vocab=True,
+    TEXT = torchtext.legacy.data.Field(sequential=True, tokenize=tokenizer_with_preprocessing, use_vocab=True,
                             lower=False, include_lengths=True, batch_first=True, fix_length=max_length, init_token="[CLS]", eos_token="[SEP]", pad_token='[PAD]', unk_token='[UNK]')
-    LABEL = torchtext.data.Field(sequential=False, use_vocab=False)
-    train_val_ds, test_ds = torchtext.data.TabularDataset.splits(
+    LABEL = torchtext.legacy.data.Field(sequential=False, use_vocab=False)
+    train_val_ds, test_ds = torchtext.legacy.data.TabularDataset.splits(
         path=DATA_PATH, train='train_dumy.tsv',
         test='test_dumy.tsv', format='tsv',
         fields=[('Text', TEXT), ('Label', LABEL)])

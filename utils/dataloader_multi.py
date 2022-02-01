@@ -60,7 +60,7 @@ class CreateDataset(Dataset):
 
 """
 class MultiLabelDataSet(torch.utils.data.Dataset):
-    def __init__(self, labels, text_file='/content/drive/My Drive/Colab Notebooks/my_bert/data/test_bin.tsv',　ext='.jpg', transform=None):
+    def __init__(self, labels, text_file='/content/drive/MyDrive/Colab Notebooks/BERT/clinical_reasoning/data/test_bin.tsv',　ext='.jpg', transform=None):
         self.labels = labels
         self.text_file = text_file
         self.ext = ext
@@ -99,10 +99,10 @@ class MultiLabelDataSet(torch.utils.data.Dataset):
         return ret
 
     def __getitem__(self, idx):
-        tokenizer_bert = BertTokenizer(vocab_file="/content/drive/My Drive/Colab Notebooks/bert_最終課題/vocab/vocab.txt", do_lower_case=False)
+        tokenizer_bert = BertTokenizer(vocab_file="/content/drive/MyDrive/Colab Notebooks/BERT/clinical_reasoning/vocab/vocab.txt", do_lower_case=False)
         df = pd.read_csv(text_file, delimiter="\t")
         
-        TEXT = torchtext.data.Field(sequential=True, tokenize=tokenizer_with_preprocessing, use_vocab=True,
+        TEXT = torchtext.legacy.data.Field(sequential=True, tokenize=tokenizer_with_preprocessing, use_vocab=True,
                             lower=False, include_lengths=True, batch_first=True, fix_length=max_length, init_token="[CLS]", eos_token="[SEP]", pad_token='[PAD]', unk_token='[UNK]')
         
         
@@ -130,7 +130,7 @@ def get_chABSA_DataLoaders_and_TEXT(max_length=256, batch_size=32):
     np.random.seed(1234)
     random.seed(1234)
     # 単語分割用のTokenizerを用意
-    tokenizer_bert = BertTokenizer(vocab_file="/content/drive/My Drive/Colab Notebooks/bert_最終課題/vocab/vocab.txt", do_lower_case=False)
+    tokenizer_bert = BertTokenizer(vocab_file="/content/drive/MyDrive/Colab Notebooks/BERT/clinical_reasoning/vocab/vocab.txt", do_lower_case=False)
 
     def preprocessing_text(text):
         # 半角・全角の統一
@@ -159,13 +159,13 @@ def get_chABSA_DataLoaders_and_TEXT(max_length=256, batch_size=32):
         return ret
     # データを読み込んだときに、読み込んだ内容に対して行う処理を定義します
     max_length = 256
-    TEXT = torchtext.data.Field(sequential=True, tokenize=tokenizer_with_preprocessing, use_vocab=True,
+    TEXT = torchtext.legacy.data.Field(sequential=True, tokenize=tokenizer_with_preprocessing, use_vocab=True,
                             lower=False, include_lengths=True, batch_first=True, fix_length=max_length, init_token="[CLS]", eos_token="[SEP]", pad_token='[PAD]', unk_token='[UNK]')
-    LABEL = torchtext.data.Field(sequential=False, use_vocab=False)
+    LABEL = torchtext.legacy.data.Field(sequential=False, use_vocab=False)
 
     # フォルダ「data」から各tsvファイルを読み込みます
     # BERT用で処理するので、10分弱時間がかかります
-    train_val_ds, test_ds = torchtext.data.TabularDataset.splits(
+    train_val_ds, test_ds = torchtext.legacy.data.TabularDataset.splits(
         path=DATA_PATH, train='train.tsv',
         test='test.tsv', format='tsv',
         fields=[('Text', TEXT), ('Label', LABEL)])
@@ -175,8 +175,8 @@ def get_chABSA_DataLoaders_and_TEXT(max_length=256, batch_size=32):
     TEXT.vocab.stoi = vocab_bert    
     
     batch_size = 32  # BERTでは16、32あたりを使用する
-    train_dl = torchtext.data.Iterator(train_val_ds, batch_size=batch_size, train=True)
-    val_dl = torchtext.data.Iterator(test_ds, batch_size=batch_size, train=False, sort=False)
+    train_dl = torchtext.legacy.data.Iterator(train_val_ds, batch_size=batch_size, train=True)
+    val_dl = torchtext.legacy.data.Iterator(test_ds, batch_size=batch_size, train=False, sort=False)
     # 辞書オブジェクトにまとめる
     dataloaders_dict = {"train": train_dl, "val": val_dl}
 
