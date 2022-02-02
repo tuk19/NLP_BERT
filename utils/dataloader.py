@@ -26,7 +26,7 @@ from utils.config import PKL_FILE, VOCAB_FILE, DATA_PATH
 def get_chABSA_DataLoaders_and_TEXT(max_length=256, batch_size=32):
     """IMDbのDataLoaderとTEXTオブジェクトを取得する。 """
     # 出力保存用のテキストファイル
-    path_w = '/content/drive/MyDrive/Colab Notebooks/BERT/clinical_reasoning/data/Tokenizer_output/negaposi.txt'
+    path_w = '/content/drive/MyDrive/Colab Notebooks/BERT/clinical_reasoning/NLP_BERT/data/Tokenizer_output/negaposi.txt'
     if os.path.isfile(path_w):
       os.remove(path_w)
     # 乱数のシードを設定
@@ -34,7 +34,7 @@ def get_chABSA_DataLoaders_and_TEXT(max_length=256, batch_size=32):
     np.random.seed(1234)
     random.seed(1234)
     # 単語分割用のTokenizerを用意
-    tokenizer_bert = BertTokenizer(vocab_file="/content/drive/MyDrive/Colab Notebooks/BERT/clinical_reasoning/vocab/vocab.txt", do_lower_case=False)
+    tokenizer_bert = BertTokenizer(vocab_file="/content/drive/MyDrive/Colab Notebooks/BERT/clinical_reasoning/NLP_BERT/vocab/vocab.txt", do_lower_case=False)
 
     def preprocessing_text(text):
         # 半角・全角の統一
@@ -87,7 +87,7 @@ def get_chABSA_DataLoaders_and_TEXT(max_length=256, batch_size=32):
     # BERT用で処理するので、10分弱時間がかかります
     """
     train_val_ds, test_ds = torchtext.legacy.data.TabularDataset.splits(
-        path="/content/drive/MyDrive/Colab Notebooks/BERT/clinical_reasoning/data", train='train_bin.tsv',
+        path="/content/drive/MyDrive/Colab Notebooks/BERT/clinical_reasoning/NLP_BERT/data", train='train_bin.tsv',
         test='test_bin.tsv', format='tsv',
         fields=[('Text', TEXT), ('Label', LABEL), ('COUGH', COUGH), ('RUNNY_NOSE', RUNNY_NOSE), ('FEVER', FEVER),
             ('SORE_THROAT', SORE_THROAT), ('ASTHMA', ASTHMA), ('HEADACHE', HEADACHE), ('SPUTUM', SPUTUM),
@@ -95,13 +95,13 @@ def get_chABSA_DataLoaders_and_TEXT(max_length=256, batch_size=32):
 
     """
     train_val_ds, test_ds = torchtext.legacy.data.TabularDataset.splits(
-        path="//content/drive/MyDrive/Colab Notebooks/BERT/clinical_reasoning/data", train='train_negaposhi.tsv',
+        path="/content/drive/MyDrive/Colab Notebooks/BERT/clinical_reasoning/NLP_BERT/data", train='train_negaposhi.tsv',
         test='test_negaposhi.tsv', format='tsv',
         fields=[('Text', TEXT), ('Label', LABEL)])
     
     """
     train_val_ds, test_ds = torchtext.legacy.data.TabularDataset.splits(
-        path="/content/drive/MyDrive/Colab Notebooks/BERT/clinical_reasoningdata", train='train.tsv',
+        path="/content/drive/MyDrive/Colab Notebooks/BERT/clinical_reasoning/NLP_BERT/data", train='train.tsv',
         test='test.tsv', format='tsv',
         fields=[('Text', TEXT), ('Label', LABEL)])
     """

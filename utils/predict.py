@@ -20,7 +20,7 @@ def build_bert_model():
     config = get_config(file_path=BERT_CONFIG)
     net_bert = BertModel(config) # BERTモデルを作成します
     net_trained = BertForchABSA(net_bert)
-    net_trained.load_state_dict(torch.load("/content/drive/MyDrive/Colab Notebooks/BERT/clinical_reasoning/weights/bert_fine_tuning_chABSA_test.pth", map_location='cpu'))
+    net_trained.load_state_dict(torch.load("/content/drive/MyDrive/Colab Notebooks/BERT/clinical_reasoning/NLP_BERT/weights/bert_fine_tuning_chABSA_test.pth", map_location='cpu'))
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     net_trained.eval()   # モデルを検証モードに
     net_trained.to(device)

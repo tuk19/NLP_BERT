@@ -60,7 +60,7 @@ class CreateDataset(Dataset):
 
 """
 class MultiLabelDataSet(torch.utils.data.Dataset):
-    def __init__(self, labels, text_file='/content/drive/MyDrive/Colab Notebooks/BERT/clinical_reasoning/data/test_bin.tsv',　ext='.jpg', transform=None):
+    def __init__(self, labels, text_file='/content/drive/MyDrive/Colab Notebooks/BERT/clinical_reasoning/NLP_BERT/data/test_bin.tsv',　ext='.jpg', transform=None):
         self.labels = labels
         self.text_file = text_file
         self.ext = ext
@@ -99,7 +99,7 @@ class MultiLabelDataSet(torch.utils.data.Dataset):
         return ret
 
     def __getitem__(self, idx):
-        tokenizer_bert = BertTokenizer(vocab_file="/content/drive/MyDrive/Colab Notebooks/BERT/clinical_reasoning/vocab/vocab.txt", do_lower_case=False)
+        tokenizer_bert = BertTokenizer(vocab_file="/content/drive/MyDrive/Colab Notebooks/BERT/clinical_reasoning/NLP_BERT/vocab/vocab.txt", do_lower_case=False)
         df = pd.read_csv(text_file, delimiter="\t")
         
         TEXT = torchtext.legacy.data.Field(sequential=True, tokenize=tokenizer_with_preprocessing, use_vocab=True,
@@ -130,7 +130,7 @@ def get_chABSA_DataLoaders_and_TEXT(max_length=256, batch_size=32):
     np.random.seed(1234)
     random.seed(1234)
     # 単語分割用のTokenizerを用意
-    tokenizer_bert = BertTokenizer(vocab_file="/content/drive/MyDrive/Colab Notebooks/BERT/clinical_reasoning/vocab/vocab.txt", do_lower_case=False)
+    tokenizer_bert = BertTokenizer(vocab_file="/content/drive/MyDrive/Colab Notebooks/BERT/clinical_reasoning/NLP_BERT/vocab/vocab.txt", do_lower_case=False)
 
     def preprocessing_text(text):
         # 半角・全角の統一

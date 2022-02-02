@@ -11,7 +11,7 @@ from utils.tokenizer import BasicTokenizer, WordpieceTokenizer, JumanTokenize
 
 def get_config(file_path):
     # 設定をconfig.jsonから読み込み、JSONの辞書変数をオブジェクト変数に変換
-    config_file = "/content/drive/MyDrive/Colab Notebooks/BERT/clinical_reasoning/utils/bert_config.json"  # file_path  
+    config_file = "/content/drive/MyDrive/Colab Notebooks/BERT/clinical_reasoning/NLP_BERT/utils/bert_config.json"  # file_path  
     # "./weights/bert_config.json"
 
     # ファイルを開き、JSONとして読み込む
@@ -632,7 +632,7 @@ def load_vocab(vocab_file):
     ids_to_tokens = collections.OrderedDict()  # (id, 単語)の順番の辞書変数
     index = 0
 
-    with open("/content/drive/MyDrive/Colab Notebooks/BERT/clinical_reasoning/vocab/vocab.txt", "r", encoding="utf-8") as reader: #vocab_file
+    with open("/content/drive/MyDrive/Colab Notebooks/BERT/clinical_reasoning/NLP_BERT/vocab/vocab.txt", "r", encoding="utf-8") as reader: #vocab_file
         while True:
             token = reader.readline()
             if not token:
@@ -656,7 +656,7 @@ class BertTokenizer(object):
         '''
 
         # ボキャブラリーのロード
-        self.vocab, self.ids_to_tokens = load_vocab("/content/drive/MyDrive/Colab Notebooks/BERT/clinical_reasoning/vocab/vocab.txt")
+        self.vocab, self.ids_to_tokens = load_vocab("/content/drive/MyDrive/Colab Notebooks/BERT/clinical_reasoning/NLP_BERT/vocab/vocab.txt")
 
         # 分割処理の関数をフォルダ「utils」からimoprt、sub-wordで単語分割を行う
         self.never_split = ("[UNK]", "[SEP]", "[PAD]", "[CLS]", "[MASK]")

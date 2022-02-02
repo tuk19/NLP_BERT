@@ -14,7 +14,7 @@ class BertWordPieceTokenizer(BaseTokenizer):
 
     def __init__(
         self,
-        vocab_file: Optional[str] = '/content/drive/MyDrive/Colab Notebooks/BERT/clinical_reasoning/vocab/vocab.txt',
+        vocab_file: Optional[str] = '/content/drive/MyDrive/Colab Notebooks/BERT/clinical_reasoning/NLP_BERT/vocab/vocab.txt',
         unk_token: Union[str, AddedToken] = "[UNK]",
         sep_token: Union[str, AddedToken] = "[SEP]",
         cls_token: Union[str, AddedToken] = "[CLS]",
@@ -289,7 +289,7 @@ class BaseTextProcessorForDataField(object):
 from pyknp import Juman
 from transformers import BertTokenizer
 
-PATH_VOCAB = '/content/drive/MyDrive/Colab Notebooks/BERT/clinical_reasoning/vocab/vocab.txt'    # 1行に1語彙が書かれたtxtファイル
+PATH_VOCAB = '/content/drive/MyDrive/Colab Notebooks/BERT/clinical_reasoning/NLP_BERT/vocab/vocab.txt'    # 1行に1語彙が書かれたtxtファイル
 jpp = Juman()
 tokenizer = BertTokenizer.from_pretrained(PATH_VOCAB)
 
