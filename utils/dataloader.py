@@ -94,10 +94,7 @@ def get_chABSA_DataLoaders_and_TEXT(max_length=256, batch_size=32):
             ('DOCTOR', DOCTOR)])fields=[('Text', TEXT), ('Label', LABEL)])
 
     """
-    train_val_ds, test_ds = torchtext.legacy.data.TabularDataset.splits(
-        path="/content/drive/MyDrive/Colab Notebooks/BERT/clinical_reasoning/NLP_BERT/data", train='train_negaposhi.tsv',
-        test='test_negaposhi.tsv', format='tsv',
-        fields=[('Text', TEXT), ('Label', LABEL)])
+
     
     """
     train_val_ds, test_ds = torchtext.legacy.data.TabularDataset.splits(
@@ -105,6 +102,12 @@ def get_chABSA_DataLoaders_and_TEXT(max_length=256, batch_size=32):
         test='test.tsv', format='tsv',
         fields=[('Text', TEXT), ('Label', LABEL)])
     """
+    
+    train_val_ds, test_ds = torchtext.legacy.data.TabularDataset.splits(
+    path="/content/drive/MyDrive/Colab Notebooks/BERT/clinical_reasoning/NLP_BERT/data", train='train_2value.tsv',
+    test='test_2value.tsv', format='tsv',
+    fields=[('Text', TEXT), ('Label', LABEL)])
+        
     vocab_bert, ids_to_tokens_bert = load_vocab(vocab_file=VOCAB_FILE)
     TEXT.build_vocab(train_val_ds, min_freq=1)
     TEXT.vocab.stoi = vocab_bert    
