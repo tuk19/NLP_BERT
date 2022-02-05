@@ -700,18 +700,23 @@ class BertTokenizer(object):
 class BertForchABSA(nn.Module):
     '''BERTモデルにchABSAのポジ・ネガを判定する部分をつなげたモデル'''
 
-    def __init__(self, net_bert):
+    def __init__(self, net_bert, num_labels=2 ):
         super(BertForchABSA, self).__init__()
 
         # BERTモジュール
         self.bert = net_bert  # BERTモデル
 
         # headにポジネガ予測を追加
-        # 入力はBERTの出力特徴量の次元、出力はポジ・ネガの2つ
-        
-        # self.cls = nn.Linear(in_features=768, out_features=14)
+        # 出力をラベル数に合わせる
+        if num_labels == 14:
+          out_features = 14
+        elif num_labels == 6:
+          out_features = 6
+        else:
+          out_features = 2
+
         self.pre_cls=nn.Linear(768,32)
-        self.cls = nn.Linear(in_features=32, out_features=2)
+        self.cls = nn.Linear(in_features=32, out_features=out_features)
 
         # 重み初期化処理
         nn.init.normal_(self.pre_cls.weight, std=0.02)

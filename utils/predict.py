@@ -96,7 +96,7 @@ def highlight(word, attn):
         255, int(255*(1 - attn)), int(255*(1 - attn)))
     return '<span style="background-color: {}"> {}</span>'.format(html_color, word)
 
-def mk_html(input, preds, normlized_weights, TEXT):
+def mk_html(input, preds, normlized_weights, TEXT, num_labels):
     "HTMLデータを作成する"
     tokenizer_bert = BertTokenizer(vocab_file=VOCAB_FILE, do_lower_case=False)
     # indexの結果を抽出
@@ -105,9 +105,52 @@ def mk_html(input, preds, normlized_weights, TEXT):
     pred = preds[0]  # 予測
     # 予測結果を文字に置き換え
 
-    if pred == 0: 
+    if num_labels == 14:
+      if pred == 0:
+        pred_str = "None"
+      elif pred == 1:
+        pred_str = "Cough"
+      elif pred == 2:
+        pred_str = "Runny_nose"
+      elif pred == 3:
+        pred_str = "Fever"
+      elif pred == 4:
+        pred_str = "Sore_throat"
+      elif pred == 5:
+        pred_str = "Cough_&_Runny_nose"
+      elif pred == 6:
+        pred_str = "Cough_&_Fever"
+      elif pred == 7:
+        pred_str = "Asthma"
+      elif pred == 8:
+        pred_str = "Cold"
+      elif pred == 9:
+        pred_str = "Headache"
+      elif pred == 10:
+        pred_str = "Cough_&_Headache"
+      elif pred == 11:
+        pred_str = "Runny_nose_&_Headache"
+      elif pred == 12:
+        pred_str = "Sputum"
+      elif pred == 13:
+        pred_str = "See_doctor"
+    elif num_labels == 6:
+      if pred == 0:
+        pred_str = "None"
+      elif pred == 1:
+        pred_str = "Cough"
+      elif pred == 2:
+        pred_str = "Runny_nose"
+      elif pred == 3:
+        pred_str = "Sore_throat"
+      elif pred == 4:
+        pred_str = "Headache"
+      elif pred == 5:
+        pred_str = "See_doctor"  
+    else:
+      if pred == 0: 
         pred_str = "None"   # なし
-    elif pred == 1:
+      elif pred == 1:
         pred_str = "Symptom"    # 咳
 
     # 表示用のHTMLを作成する
@@ -144,7 +187,7 @@ def mk_html(input, preds, normlized_weights, TEXT):
     html += "<br><br>"
     return html
 
-def predict(input_text, net_trained):
+def predict(input_text, net_trained, num_labels=2):
     TEXT = pickle_load(PKL_FILE)   #vocabデータのロード
     input = conver_to_model_format(input_text, TEXT)
     input_pad = 1  # 単語のIDにおいて、'<pad>': 1 なので
@@ -152,7 +195,7 @@ def predict(input_text, net_trained):
     outputs, attention_probs = net_trained(input, token_type_ids=None, attention_mask=None,
                                        output_all_encoded_layers=False, attention_show_flg=True)
     _, preds = torch.max(outputs, 1)  # ラベルを予測
-    html_output = mk_html(input, preds, attention_probs, TEXT)  # HTML作成
+    html_output = mk_html(input, preds, attention_probs, TEXT, num_labels)  # HTML作成
     return html_output
     
 def predict2(input_text, net_trained):
