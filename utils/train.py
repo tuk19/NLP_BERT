@@ -6,7 +6,14 @@ import torch
 
 
 def train_model(net, dataloaders_dict, criterion, optimizer, num_epochs):
-
+    
+    # 取得したデータを返す
+    epochs = []
+    train_loss = []
+    train_acc = []
+    val_loss = []
+    val_acc = []
+    
     # GPUが使えるかを確認
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print("使用デバイス：", device)
@@ -88,6 +95,16 @@ def train_model(net, dataloaders_dict, criterion, optimizer, num_epochs):
 
             print('Epoch {}/{} | {:^5} |  Loss: {:.4f} Acc: {:.4f}'.format(epoch+1, num_epochs,
                                                                            phase, epoch_loss, epoch_acc))
+            
+            # 得られた値をリストへ格納
+            if phase == "train":
+                train_loss.append(epoch_loss)
+                train_acc.append(epoch_acc)
+            else:
+                val_loss.append(epoch_loss)
+                val_acc.append(epoch_acc)
+                epochs.append(epoch+1)
+            
             t_epoch_start = time.time()
-
-    return net
+            
+    return net, epochs, train_loss, train_acc, val_loss, val_acc
