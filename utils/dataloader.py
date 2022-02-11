@@ -45,7 +45,7 @@ def get_chABSA_DataLoaders_and_TEXT(max_length=256, batch_size=32, num_labels=2)
         text = re.sub('　', '', text)
         text = re.sub(' ', '', text)
         # 数字文字の一律「0」化
-        text = re.sub(r'[0-9 ０-９]+', '0', text)  # 数字
+        # text = re.sub(r'[0-9 ０-９]+', '0', text)  # 数字
 
         # カンマ、ピリオド以外の記号をスペースに置換
         for p in string.punctuation:
