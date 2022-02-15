@@ -700,29 +700,42 @@ class BertTokenizer(object):
 class BertForchABSA(nn.Module):
     '''BERTモデルにchABSAのポジ・ネガを判定する部分をつなげたモデル'''
 
-    def __init__(self, net_bert, num_labels=2 ):
+    def __init__(self, net_bert, num_labels=2):
         super(BertForchABSA, self).__init__()
 
         # BERTモジュール
         self.bert = net_bert  # BERTモデル
-
+        self.num_labels = num_labels
+        
         # headにポジネガ予測を追加
         # 出力をラベル数に合わせる
-        if num_labels == 14:
-          out_features = 14
-        elif num_labels == 6:
-          out_features = 6
+        out_features = num_labels
+        
+        if num_labels == 2:
+            self.cls1 = nn.Linear(768, 256)
+            self.cls2 = nn.Linear(256, 32)
+            self.cls3 = nn.Linear(in_features=32, out_features=out_features)
+
+            # 重み初期化処理
+            nn.init.normal_(self.cls1.weight, std=0.02)
+            nn.init.normal_(self.cls1.bias, 0)
+            nn.init.normal_(self.cls2.weight, std=0.02)
+            nn.init.normal_(self.cls2.bias, 0)
+            nn.init.normal_(self.cls3.weight, std=0.02)
+            nn.init.normal_(self.cls3.bias, 0)
         else:
-          out_features = 2
+            self.cls1 = nn.Linear(768, 256)
+            self.cls2 = nn.Linear(256, 32)
+            self.cls3 = nn.Linear(in_features=32, out_features=out_features)
 
-        self.pre_cls=nn.Linear(768,32)
-        self.cls = nn.Linear(in_features=32, out_features=out_features)
-
-        # 重み初期化処理
-        nn.init.normal_(self.pre_cls.weight, std=0.02)
-        nn.init.normal_(self.pre_cls.bias, 0)
-        nn.init.normal_(self.cls.weight, std=0.02)
-        nn.init.normal_(self.cls.bias, 0)
+            # 重み初期化処理
+            nn.init.normal_(self.cls1.weight, std=0.02)
+            nn.init.normal_(self.cls1.bias, 0)
+            nn.init.normal_(self.cls2.weight, std=0.02)
+            nn.init.normal_(self.cls2.bias, 0)
+            nn.init.normal_(self.cls3.weight, std=0.02)
+            nn.init.normal_(self.cls3.bias, 0)
+            
 
     def forward(self, input_ids, token_type_ids=None, attention_mask=None, output_all_encoded_layers=False, attention_show_flg=False):
         '''
@@ -755,9 +768,19 @@ class BertForchABSA(nn.Module):
         vec_0 = encoded_layers[:, 0, :]
         vec_0 = vec_0.view(-1, 768)  # sizeを[batch_size, hidden_sizeに変換
         # out = self.cls(vec_0)
-
-        pre_out = F.relu(self.pre_cls(vec_0))
-        out = self.cls(pre_out)
+        
+        if self.num_labels == 2:
+            out1 = F.relu(self.cls1(vec_0))
+            out2 = F.relu(self.cls2(out1))
+            out = self.cls3(out2)
+        else:
+            out1 = F.relu(self.cls1(vec_0))
+            out2 = F.relu(self.cls2(out1))
+            out = self.cls3(out2) 
+        
+        # out1 = F.relu(self.cls1(vec_0))
+        # out2 = F.relu(self.cls2(out1))
+        # out = self.cls3(out2) 
 
         # attention_showのときは、attention_probs（1番最後の）もリターンする
         if attention_show_flg == True:
