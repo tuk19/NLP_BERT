@@ -723,18 +723,33 @@ class BertForchABSA(nn.Module):
             nn.init.normal_(self.cls2.bias, 0)
             nn.init.normal_(self.cls3.weight, std=0.02)
             nn.init.normal_(self.cls3.bias, 0)
-        else:
-            self.cls1 = nn.Linear(768, 256)
-            self.cls2 = nn.Linear(256, 32)
-            self.cls3 = nn.Linear(in_features=32, out_features=out_features)
+        elif num_labels == 6:
+            self.cls1 = nn.Linear(768, 512)
+            self.cls2 = nn.Linear(in_features=512, out_features=out_features)
 
             # 重み初期化処理
             nn.init.normal_(self.cls1.weight, std=0.02)
             nn.init.normal_(self.cls1.bias, 0)
             nn.init.normal_(self.cls2.weight, std=0.02)
             nn.init.normal_(self.cls2.bias, 0)
-            nn.init.normal_(self.cls3.weight, std=0.02)
-            nn.init.normal_(self.cls3.bias, 0)
+        elif num_labels == 14:
+            self.cls1 = nn.Linear(768, 512)
+            self.cls2 = nn.Linear(in_features=512, out_features=out_features)
+
+            # 重み初期化処理
+            nn.init.normal_(self.cls1.weight, std=0.02)
+            nn.init.normal_(self.cls1.bias, 0)
+            nn.init.normal_(self.cls2.weight, std=0.02)
+            nn.init.normal_(self.cls2.bias, 0)
+        else:
+            self.cls1 = nn.Linear(768, 32)
+            self.cls2 = nn.Linear(in_features=32, out_features=out_features)
+
+            # 重み初期化処理
+            nn.init.normal_(self.cls1.weight, std=0.02)
+            nn.init.normal_(self.cls1.bias, 0)
+            nn.init.normal_(self.cls2.weight, std=0.02)
+            nn.init.normal_(self.cls2.bias, 0)
             
 
     def forward(self, input_ids, token_type_ids=None, attention_mask=None, output_all_encoded_layers=False, attention_show_flg=False):
@@ -773,15 +788,18 @@ class BertForchABSA(nn.Module):
             out1 = F.relu(self.cls1(vec_0))
             out2 = F.relu(self.cls2(out1))
             out = self.cls3(out2)
+        elif self.num_labels == 6:
+            out1 = F.relu(self.cls1(vec_0))
+            out = self.cls2(out1)
+        elif self.num_labels == 14:
+            out1 = F.relu(self.cls1(vec_0))
+            # out2 = F.relu(self.cls2(out1))
+            # out3 = F.dropout(out2, 0.5)
+            out = self.cls2(out1)
         else:
             out1 = F.relu(self.cls1(vec_0))
-            out2 = F.relu(self.cls2(out1))
-            out = self.cls3(out2) 
-        
-        # out1 = F.relu(self.cls1(vec_0))
-        # out2 = F.relu(self.cls2(out1))
-        # out = self.cls3(out2) 
-
+            out = self.cls2(out1) 
+   
         # attention_showのときは、attention_probs（1番最後の）もリターンする
         if attention_show_flg == True:
             return out, attention_probs
